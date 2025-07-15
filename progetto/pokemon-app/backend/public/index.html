@@ -24,11 +24,9 @@
       </div>
     </div>
     <div class="row" id="pokemon-row"></div>
-    <button id="load-btn" class="btn btn-success mt-3">Carica altri 3</button>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/devextreme@23.2.5/dist/js/dx.all.js"></script>
   <script>
-    let offset = 0;
     let searchValue = '';
     let searchBoxInstance;
     let searchBtnInstance;
@@ -38,10 +36,11 @@
       document.getElementById('title').textContent = data.title;
     }
     async function fetchPokemons() {
-      let url = `/api/pokemon?offset=${offset}`;
-      if (searchValue && searchValue.trim() !== '') {
-        url = `/api/pokemon?search=${encodeURIComponent(searchValue.trim())}`;
+      if (!searchValue || searchValue.trim() === '') {
+        document.getElementById('pokemon-row').innerHTML = '';
+        return;
       }
+      let url = `/api/pokemon?search=${encodeURIComponent(searchValue.trim())}`;
       const res = await fetch(url);
       const pokemons = await res.json();
       const row = document.getElementById('pokemon-row');
@@ -62,15 +61,8 @@
         `;
       });
     }
-    document.getElementById('load-btn').onclick = () => {
-      offset += 3;
-      searchValue = '';
-      if (searchBoxInstance) searchBoxInstance.option('value', '');
-      fetchPokemons();
-    };
     function doSearch() {
       searchValue = searchBoxInstance.option('value');
-      offset = 0;
       fetchPokemons();
     }
     fetchTitle();
@@ -85,7 +77,6 @@
       width: '100%',
       onClick: doSearch
     });
-    fetchPokemons();
   </script>
 </body>
 </html>
