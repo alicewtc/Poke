@@ -1,0 +1,15 @@
+{
+  "name": "pokemon-app-backend",
+  "version": "1.0.0",
+  "description": "Backend for the Pokemon App using Node.js and Express",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "axios": "^0.21.1"
+  },
+  "author": "",
+  "license": "ISC"
+}
