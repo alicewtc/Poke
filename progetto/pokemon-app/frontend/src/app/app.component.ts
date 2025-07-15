@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 export class AppComponent implements OnInit {
   title: string = '';
   pokemons: any[] = [];
+  offset: number = 0;
 
   constructor(private http: HttpClient) {}
 
@@ -18,18 +19,19 @@ export class AppComponent implements OnInit {
   }
 
   fetchTitle() {
-    this.http.get<{ title: string }>('/title').subscribe(response => {
+    this.http.get<{ title: string }>('/api/title').subscribe(response => {
       this.title = response.title;
     });
   }
 
   loadPokemons() {
-    this.http.get<any[]>('https://pokeapi.co/api/v2/pokemon?limit=3').subscribe(response => {
-      this.pokemons = response.results;
+    this.http.get<any[]>(`/api/pokemon?offset=${this.offset}`).subscribe(response => {
+      this.pokemons = response;
     });
   }
 
-  loadMorePokemons() {
+  loadMore() {
+    this.offset += 3;
     this.loadPokemons();
   }
 }
