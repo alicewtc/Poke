@@ -54,11 +54,18 @@ Il server sarà disponibile su [http://localhost:3000](http://localhost:3000).
   npm start
   ```
 
+
 ## Deploy su Render
 
 - **Root Directory:** `backend`
 - **Build Command:**  
-  `cd ../frontend && npm install && npm run build && cd ../backend && npm install`
+  `export NODE_OPTIONS=--openssl-legacy-provider && cd ../frontend && npm install && npm run build && cd ../backend && npm install`
 - **Start Command:**  
   `node src/index.js`
+
+- **Variabile d'ambiente consigliata:**
+  - Chiave: `NODE_OPTIONS`
+  - Valore: `--openssl-legacy-provider`
+
+Questo risolve i problemi di compatibilità tra Angular/webpack e Node.js 17+ su Render.
 
