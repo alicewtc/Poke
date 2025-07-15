@@ -27,6 +27,60 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/devextreme@23.2.5/dist/js/dx.all.js"></script>
   <script>
+    // Attendi che DevExtreme sia caricato
+    document.addEventListener('DOMContentLoaded', function() {
+      let searchValue = '';
+      let searchBoxInstance;
+      let searchBtnInstance;
+      async function fetchTitle() {
+        const res = await fetch('/api/title');
+        const data = await res.json();
+        document.getElementById('title').textContent = data.title;
+      }
+      async function fetchPokemons() {
+        if (!searchValue || searchValue.trim() === '') {
+          document.getElementById('pokemon-row').innerHTML = '';
+          return;
+        }
+        let url = `/api/pokemon?search=${encodeURIComponent(searchValue.trim())}`;
+        const res = await fetch(url);
+        const pokemons = await res.json();
+        const row = document.getElementById('pokemon-row');
+        row.innerHTML = '';
+        pokemons.forEach(p => {
+          row.innerHTML += `
+            <div class="col-md-4">
+              <div class="card mb-4">
+                <img src="${p.image}" class="card-img-top" alt="${p.name}">
+                <div class="card-body">
+                  <h5 class="card-title text-capitalize">${p.name}</h5>
+                  <p class="card-text">
+                    ${p.types.map(t => `<span class='badge bg-primary me-1'>${t}</span>`).join(' ')}
+                  </p>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      }
+      function doSearch() {
+        searchValue = searchBoxInstance.option('value');
+        fetchPokemons();
+      }
+      fetchTitle();
+      // Inizializza DevExtreme TextBox
+      searchBoxInstance = new DevExpress.ui.dxTextBox(document.getElementById('searchBox'), {
+        placeholder: 'Cerca Pokémon per nome...'
+      });
+      // Inizializza DevExtreme Button
+      searchBtnInstance = new DevExpress.ui.dxButton(document.getElementById('searchBtn'), {
+        text: 'Cerca',
+        type: 'default',
+        width: '100%',
+        onClick: doSearch
+      });
+    });
+  </script>
     let searchValue = '';
     let searchBoxInstance;
     let searchBtnInstance;
